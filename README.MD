@@ -33,15 +33,19 @@
 
 how to create table:
 
-1. CREATE TABLE name_tables (
+```postgresql
+CREATE TABLE name_tables (
    name TEXT.
    kode VARCHAR(20) not null,
    price INT,
    <!-- current timestamp akan mengisi value waktu saat ini -->
    created_at TIMESTAMP not null default current_timestamp
    ); => adjust as you want
-2. \dt (to check table in database)
-3. \d (to check type of table)
+```
+
+> [!note]
+> \dt (to check table in database)
+> \d (to check type of table)
 
 another example code sql:
 a. drop table => alter table products
