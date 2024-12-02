@@ -182,6 +182,30 @@ WHERE name NOT LIKE '%mie%' => not like mie
 
 ```
 
+## NULL OPERATOR
+
+find null data, cannot using basic operator to search null condition, IS NULL search NULL, IS NOT NULL search not null
+
+## BETWEEN OPERATOR
+
+simplify condition of WHERE ex: where price >= 1000 and price <= 2000
+
+```postgresql
+select * from name_table
+WHERE price BETWEEN 1000 and 2000;
+
+```
+
+## IN OPERATOR
+
+OPERATOR that search several value in 1 column
+
+```postgresql
+SELECT * FROM name_table
+where category IN ('food', 'water')
+
+```
+
 ## ANOTHER EXAMPLE SQL CODE
 
 Remains of another example sql code
@@ -202,5 +226,5 @@ ALTER TABLE products
 
 <!-- add type data enum -->
 <!-- for validate data with enum -->
-CREATE TYPE product_category AS ENUM("food", "drink", "etc")
+CREATE TYPE type_name AS ENUM("food", "drink", "etc")
 ```
