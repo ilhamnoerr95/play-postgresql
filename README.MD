@@ -30,3 +30,27 @@
 6. etc:https://www.postgresql.org/docs/current/datatype.html
 
 ### TABLE
+
+how to create table:
+
+1. CREATE TABLE name_tables (
+   name TEXT.
+   kode VARCHAR(20) not null,
+   price INT,
+   <!-- current timestamp akan mengisi value waktu saat ini -->
+   created_at TIMESTAMP not null default current_timestamp
+   ); => adjust as you want
+2. \dt (to check table in database)
+3. \d (to check type of table)
+
+another example code sql:
+a. drop table => alter table products
+drop column deskripsi;
+b. rename table => alter table products
+rename column name to namaea;
+c. drop table => drop table name_tables;
+d. recreate table => truncate name_tables;
+
+```
+HOW TO INSERT DATA:
+```
