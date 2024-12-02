@@ -27,7 +27,7 @@
    c. Time: HH:mm:ss
 4. TYPE data boolean (true or false only 2 data)
 5. TYPE data ENUM: data of type that have default/fix value
-6. etc:https://www.postgresql.org/docs/current/datatype.html
+6. link data Type: [LINK](https://www.postgresql.org/docs/current/datatype.html)
 
 ### TABLE
 
@@ -43,18 +43,39 @@ CREATE TABLE name_tables (
    ); => adjust as you want
 ```
 
-> [!note]
-> \dt (to check table in database)
-> \d (to check type of table)
+## another example code sql:
 
-another example code sql:
-a. drop table => alter table products
+```postgresql
+1. \dt (to check table in database)
+2. \d (to check type of table)
+3. drop table => alter table products
 drop column deskripsi;
-b. rename table => alter table products
+4. rename table => alter table products
 rename column name to namaea;
-c. drop table => drop table name_tables;
-d. recreate table => truncate name_tables;
+5. recreate table => truncate name_tables;
 
 ```
-HOW TO INSERT DATA:
+
+## HOW TO INSERT TABLE
+
+```postgresql
+INSERT INTO products(id, name, price, qty)
+VALUES ('POOO1', null, 15000, 11);
+
+<!-- insert multiple values -->
+INSERT INTO products (id, name,price, qty)
+VALUES ('POOO2', 'test', 20000, 12),
+         ('POOO3', 'test3', 40000, 1),
+          ('POOO4', 'test4', 30000, 10);
+```
+
+## HOW TO DISPLAY DATA TABLE
+
+```postgresql
+<!-- for all column -->
+SELECT * FROM nama_tables;
+
+<!-- could pick specific name columnt -->
+SELECT name, id from table_name;
+
 ```
