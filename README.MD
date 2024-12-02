@@ -86,7 +86,7 @@ CREATE TABLE nama_tables (
 
 ## WHERE CLAUSE
 
-this how we could find/search data with the condition what we want. Condition could using for update data, carefully when we want to update the data, if we wrong update the data , all data we'll be update or error. the condition tell where column want will update.
+this how we could find/search data with the condition what we want. Condition could using for update,delete data, carefully when we want to update/delete the data, if we wrong input update the data without using 'where clause', all data we'll be update.
 
 ```postgresql
 <!-- pick all column in name_table where condition is qty === 0 -->
@@ -97,6 +97,89 @@ WHERE qty = 0;
 UPDATE name_tables
 SET name_column = 'food'
 WHERE id = 'P0001';
+
+<!-- when update multiple value -->
+UPDATE name_tables
+SET name_column = 'food'
+    name_column2 = 'beraq'
+WHERE id = 'P0002';
+
+<!-- delete data -->
+DELETE FROM name_table
+WHERE id = 'PO001'
+```
+
+> [!TIP]
+> Postgres have "ALIAS" benfical feature. this feature is good when using in case JOIN feature. change real name column to become alias name.
+
+```postgresql
+SELECT
+    id as 'kode id',
+    name as nama
+from name_table as p;
+
+```
+
+## WHERE OPERATOR
+
+WHERE operator same as operators in js or another language tho.
+
+```postgresql
+SELECT * FROM name_table
+WHERE price > 15000
+
+SELECT * FROM name_table
+WHERE price = 15000
+
+SELECT * FROM name_table
+WHERE price <= 15000
+
+```
+
+## CONDITION OR, AND
+
+> [!NOTE]
+>
+> 1. explanation OPERATOR AND have 2 conditions: when 2 conditions are true the result will be true (DISPLAY THE DATA) and the rest of it will be false.
+> 2. EXPLAINS operator OR condition: when 2 condition are false the result will be false and the rest of it will true. OR condition will display data one of true condition.
+
+```postgresql
+SELECT * FROM name_table
+    WHERE price > 15000
+    AND ID = 'POOO2';
+
+<!-- OR CONDITIONS -->
+SELECT * FROM name_table
+    WHERE price > 15000
+    OR ID = 'POOO2';
+
+<!-- multiple conditions, double brackets will be prioritize. -->
+SELECT * FROM name_table
+    WHERE (qty > 2 OR category = 'food')
+    AND price < 200000;
+
+```
+
+## CONDITION LIKE OPERATOR
+
+OPERATOR LIKE used to search for part of the data in a string,
+
+> [!WARNING]
+> Operator LIKE NOT RECOMENDED to search large of data because it'll make slow searching. Case sensitive has an effect with this Operator. when wanna not affected by case sensitive please using ILIKE operator.
+
+```postgresql
+SELECT * FROM name_table
+WHERE name ILIKE '%mie%' => string have mie
+
+SELECT * FROM name_table
+WHERE name ILIKE 'b%' => prefix have b
+
+SELECT * FROM name_table
+WHERE name ILIKE '%c' => suffix have c
+
+SELECT * FROM name_table
+WHERE name NOT LIKE '%mie%' => not like mie
+
 ```
 
 ## ANOTHER EXAMPLE SQL CODE
