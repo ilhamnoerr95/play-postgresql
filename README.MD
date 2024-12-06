@@ -206,6 +206,169 @@ where category IN ('food', 'water')
 
 ```
 
+## ORDER CLAUSE
+
+ordering column by ASC and DESC
+
+```postgresql
+SELECT * FROM name_table
+ORDER BY price ASC, id DESC;
+
+```
+
+## LIMIT CLAUSE
+
+display all data in db is not wise when the data already large, with LIMIT CLAUSE will limit data to display and used to pagination in app with combination OFFSET.
+
+```postgresql
+SELECT * FROM name_table
+WHERE price > 0
+ORDER BY id ASC
+LIMIT 3;
+
+<!-- USING OFFSET, ex length of data are 10 -->
+SELECT * FROM name_table
+WHERE price > 0
+ORDER BY id ASC
+<!-- OFFSET MEANs, take data from index/offset 3 to LIMIT -->
+LIMIT 2 OFFSET 2;
+
+```
+
+## SELECT DISTINC DATA
+
+When we query select, someime we got duplicates data. there is many duplicates of data, so when you want to avoid duplicate you can using DISTINC. add before column.
+
+```postgresql
+SELECT DISTINCT category
+FROM products;
+
+```
+
+## AUTO INCREMENT
+
+We will use SERIAL TYPE for increment
+
+```postgresql
+ CREATE TABLE name_table (
+    id SERIAL not null,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+
+    PRIMARY KEY (id)
+ )
+
+ <!-- see last increment -->
+ select currval('admin_id_seq');
+```
+
+## SEQUENCE
+
+In background actually Serial type using sequence. Sequance is a function created increment. when you using serial, posgresql as default will running sequence function to primary key.
+
+### how to Create Sequence?
+
+```postgresql
+<!-- CREATE SEQUENCE -->
+create sequence name_sequence;
+
+<!-- call sequence, automatically will increment -->
+SELECT nextval('name_sequence')
+
+<!-- take last sequence value -->
+SELECT currval('name_sequence')
+
+```
+
+## FLOW CONTROL
+
+flow control same as IF ELSE BUT NOT COMPLICATED THAN another language.
+
+```postgresql
+SELECT id,
+    CASE category
+        WHEN 'food' THEN 'enak'
+        WHEN 'DRINK' Then 'seger'
+        ELSE 'APAAN TUH?'
+        END AS category
+FROM products;
+
+<!-- with operator-->
+select id ,
+	price,
+	case
+	when price < 10000 then 'murah'
+	when price <= 20000 then 'mahal'
+	else 'sangat mahal'
+    <!-- end as new column -->
+	end as murah
+from products;
+```
+
+## AGGREGATE FUNCTION
+
+functino that find out max/min/average etc from value
+
+```postgresql
+    select COUNT(id) AS "total Id" from products;
+
+```
+
+## GROUPING
+
+sometime we doing aggregate data want to grouping per category or anything.
+
+```postgresql
+SELECT category,
+COUNT(id) AS "Total products" from products
+group by category;
+
+```
+
+## HAVING CLAUSE
+
+Filtering after grouping. this just applies for grouping, as well having clause always continued by aggregate function.
+
+```postgresql
+
+SELECT category,
+COUNT(id) AS "Total products" from products
+group by category
+<!-- display total product bigger than 3 -->
+HAVING COUNT(id) > 3;
+
+SELECT category,
+MAX(price) AS "Max Price", min(price) as "Min Price", avg(price) as "Average Price" from products
+group by category
+having AVG(price) > 20000
+
+```
+
+## CONSTRAIN
+
+Rules of table, make table clear as well keep it good for the data. Constrain like validation for data.
+a. uniques constrain rule makesure the data always be uniques
+
+```postgresql
+CREATE TABLE customer (
+    id SERIAL not null,
+    email VARCHAR(255) NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    fullname VARCHAR(255),
+    PRIMARY KEY (id),
+    CONSTRAINT name_constrain UNIQUE (email)
+
+);
+
+<!-- delete constrain -->
+ALTER TABLE customer
+    DROP CONSTRAINT name_constrain;
+
+<!-- add constraint -->
+ALTER TABLE customer
+    ADD CONSTRAINT name_constrain UNIQUE (email)
+```
+
 ## ANOTHER EXAMPLE SQL CODE
 
 Remains of another example sql code
