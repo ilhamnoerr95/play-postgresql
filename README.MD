@@ -344,10 +344,14 @@ having AVG(price) > 20000
 
 ```
 
-## CONSTRAIN
+## CONSTRAINT
 
 Rules of table, make table clear as well keep it good for the data. Constrain like validation for data.
 a. uniques constrain rule makesure the data always be uniques
+
+### check constraint
+
+check constraint could add condition for checking/validation data before data save to the database.
 
 ```postgresql
 CREATE TABLE customer (
@@ -367,6 +371,41 @@ ALTER TABLE customer
 <!-- add constraint -->
 ALTER TABLE customer
     ADD CONSTRAINT name_constrain UNIQUE (email)
+
+<!-- CHECK CONSTRAINT -->
+<!-- this add constrain for existing table -->
+ALTER TABLE products
+    ADD CONSTRAINT price_check CHECK (price < 10000)
+```
+
+## INDEX
+
+As default postgresql will save the data to disk like general table. Thats means postgresql will find a data from first to end of the row, so more and more data proccessing of find data will be slow. How to find data will be easier that using Index, when we created Index, posgres will save the data as Balance-tree.
+primary key and unique constrain as default have a index.
+
+### Side Effect index
+
+index cannot effect to manipulate data process like (UPDATE,DELETE, AND INSERT). when we create index, postgres will do processing update, delete and insert every adding some data in table.
+
+> [!NOTE]
+> When the some column no have index, the data will be searched from first to end of data. \
+> for Ex: when id (have index ,col1), name(no index, col2) it will search by default without using index in other side when both of id(col1) and name(col2) have index, searching data will be faster because combination 2 of column index. \
+> Another example(col1, col2,col3), when we find data with combination (col1), or (col1,col2) or (col1,col2,col3) index will be working but when we want combination find data with (col1, col3) it'll not work because we no create for that combination.
+
+> [!WARNING]
+> when the data bigger and table have many index manipulate proccessing update, delete, insert will be slow. Please to make wise decision for create INDEX.
+
+```postgresql
+<!-- adding index -->
+CREATE INDEX name_index ON name_table (column);
+
+<!-- delete index -->
+DROP INDEX name_index;
+
+<!-- example adjust condition for add index in column -->
+CREATE INDEX name_index ON name_table (column1, column3);
+
+
 ```
 
 ## ANOTHER EXAMPLE SQL CODE
