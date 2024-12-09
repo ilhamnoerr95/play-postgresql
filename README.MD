@@ -408,6 +408,40 @@ CREATE INDEX name_index ON name_table (column1, column3);
 
 ```
 
+## FULL TEXT SEARCH
+
+somethimes we find a data with LIKE OPERATOR. LIKE OPERATOR will searching the data from first line to last lines, that make LIKE OPERATOR will be slower.
+Adding index in table will not work for LIKE OPERATOR.
+
+Full text search could find part of word in column with type string data. This same LIKE OPERATOR, but we could find the data no only equal operator.
+
+FULL TEXT operator not flexible LIKE OPERATOR;
+
+> [!NOTE]
+> query operator, to_tsquery support many operator
+> & for AND , | for OR , ! for NOT, "" for all data. Find data per word.
+> easy for for create index in full text search to automatically is when create a new table just put on type TSVECTOR for column, so that column will be automatically created index for FULL TEXT SEARCH.
+
+```postgresql
+SELECT * FROM table
+WHERE to_tsvector(column_name) @@ to_tsquery("nae")
+
+<!-- how to create index with full text search -->
+<!-- first thing first u must know about cfgname or based language that u want to used -->
+<!-- first check -->
+select cfgname from pg_ts_config;
+
+<!-- create index -->
+CREATE INDEX product_name_search ON table_name using gin (to_tsvector('indonesian', name_column));
+
+<!-- how to using full text search that registered by index -->
+SELECT * from products WHERE name_column @@ to_tsquery('blabla')
+
+<!-- example for query operator -->
+SELECT * from products WHERE name_column @@ to_tsquery('blabla | test')
+
+```
+
 ## ANOTHER EXAMPLE SQL CODE
 
 Remains of another example sql code
