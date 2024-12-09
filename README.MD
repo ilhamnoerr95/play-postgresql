@@ -420,7 +420,7 @@ FULL TEXT operator not flexible LIKE OPERATOR;
 > [!NOTE]
 > query operator, to_tsquery support many operator
 > & for AND , | for OR , ! for NOT, "" for all data. Find data per word.
-> easy for for create index in full text search to automatically is when create a new table just put on type TSVECTOR for column, so that column will be automatically created index for FULL TEXT SEARCH.
+> easy way to create index in full text search to automatically is when create a new table just put on type TSVECTOR for column, so that column will be automatically created index for FULL TEXT SEARCH.
 
 ```postgresql
 SELECT * FROM table
@@ -439,6 +439,43 @@ SELECT * from products WHERE name_column @@ to_tsquery('blabla')
 
 <!-- example for query operator -->
 SELECT * from products WHERE name_column @@ to_tsquery('blabla | test')
+
+```
+
+## TABLE RELATIONSHIP
+
+Table relation feature that relation between table. ex: when we create sales table logically we must have data of products that sell.
+
+### FOREIGN KEY
+
+foreign key used as reference for another table, that means is column of table1/sales table reference for table2/product table. type column of foreign key have to same with refrence table column. Value of foreign key have to same with refrence value in related column of table.
+
+### BENEFIT OF FOREIGN KEY
+
+foreign makesure the data that want to input in column of table
+have to same with table of reference. Foreign key as a constraint which is the table of reference related to the foreign key cannot remove from table.
+
+> [!NOTE]
+> As default, value of reference table cannot be removed when data column of foreign-key have same value with reference column table. But that not means, cannot be removed. See how to know about behavior of foreign-key at the folder provided.
+
+```postgresql
+<!-- create foreign key -->
+create table wishlist (
+id UUID not null,
+id_product VARCHAR(10) not null,
+description TEXT,
+primary key(id),
+constraint fk_wishlist_product foreign KEY (id_product) references products (id)
+
+<!-- delete foreign key -->
+ALTER TABLE name_table
+DROP CONSTRAINT fk_wishlist_product;
+
+<!-- add foreign key that product table had created -->
+ALTER TABLE name_table
+ADD CONSTRAINT fk_wishlist_product foreign KEY (id_product) references products (id);
+)
+
 
 ```
 
