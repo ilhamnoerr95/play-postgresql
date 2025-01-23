@@ -458,6 +458,8 @@ have to same with table of reference. Foreign key as a constraint which is the t
 > [!NOTE]
 > As default, value of reference table cannot be removed when data column of foreign-key have same value with reference column table. But that not means, cannot be removed. See how to know about behavior of foreign-key at the folder provided.
 
+
+
 ```postgresql
 <!-- create foreign key -->
 create table wishlist (
@@ -475,6 +477,27 @@ DROP CONSTRAINT fk_wishlist_product;
 ALTER TABLE name_table
 ADD CONSTRAINT fk_wishlist_product foreign KEY (id_product) references products (id);
 )
+
+
+```
+
+### JOIN TABLE
+menggabungkan beberapa table menjadi 1 table, dimana kita perlu menentukan table mana yang memiliki referensi atas foreign key dari sebuah table.
+
+> [!NOTE]
+> perlu diingat semakin banyak join table akan semakin berat proses dari quernya, idealnya melakukan join table maksimal adalah 5 table.
+
+```sql
+-- table wishtlist ingin join dengan table product
+Select * from wishlist_table 
+-- join di table product di kolom product.id dengan wishlist_table.id_product
+JOIN product ON product.id = wishlist_table.id_product
+
+-- join multiple table
+SELECT customer.email, products.id, products.price , wishlist.description 
+FROM wishlist
+JOIN product ON product.id = wishlist.id_product
+JOIN customer ON customer.id = wishlist.id_customer;
 
 
 ```
