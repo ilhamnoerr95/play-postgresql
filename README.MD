@@ -498,12 +498,19 @@ SELECT customer.email, products.id, products.price , wishlist.description
 FROM wishlist
 JOIN product ON product.id = wishlist.id_product
 JOIN customer ON customer.id = wishlist.id_customer;
+```
 
+### ONE TO ONE RELATIONSHIP TABLE
+One to one relationship is very simple relation between table, its mean one table just only relation to one table not more. 
+
+```sql
+select c.id ,c.email, c.username, w.balance 
+from customer as c
+join wallet as w on w.id_customer  = c.id;
 
 ```
 
 ## ANOTHER EXAMPLE SQL CODE
-
 Remains of another example sql code
 
 ```postgresql
@@ -523,4 +530,8 @@ ALTER TABLE products
 <!-- add type data enum -->
 <!-- for validate data with enum -->
 CREATE TYPE type_name AS ENUM("food", "drink", "etc")
+
+<!-- add column -->
+ALTER TABLE table_name
+add column INT;
 ```
