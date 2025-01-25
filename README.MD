@@ -510,6 +510,9 @@ join wallet as w on w.id_customer  = c.id;
 
 ```
 
+### ONE TO MANY RELATIONSHIP TABLE
+relation that one data could using for many data in relation table. ex: 1 category could using for more than 1 products, 1 category have more than 1 products.
+
 ## ANOTHER EXAMPLE SQL CODE
 Remains of another example sql code
 
