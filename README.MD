@@ -513,6 +513,41 @@ join wallet as w on w.id_customer  = c.id;
 ### ONE TO MANY RELATIONSHIP TABLE
 relation that one data could using for many data in relation table. ex: 1 category could using for more than 1 products, 1 category have more than 1 products.
 
+### MANY TO MANY RELATIONSHIP TABLE
+many to many relationships are very confused for a newbie, which is many to many relation between 2 table that first table have many relation to table 2 or vice versa. ex: product table and sale, that product could sale many times,even sale could more than for 1 products.
+
+> [!NOTE]
+> brief of many to many relations:
+> 1. id_product in table order: \
+> a. when add id_product to order table that means, this case could products sold many times. but we just could order only 1 products because id_product column represents of 1 products not more.
+> 2. id_order in table products: \
+> a. this case we could 1 order have many products, but the problem is 1 products just only sold 1 times.
+>
+> The solution of this problem is we have to add 1 table between table products and sale, we could leverage this table as bridge for join relation many to many. 
+
+```sql
+-- create for intermediary table many to many
+CREATE TABLE order_detail (
+    id_product INT NOT NULL, 
+    id_order INT NOT NULL,
+    price INT NOT NULL,
+    quantity INT NOT NULL,
+    PRIMARY KEY (id_product, id_order)
+)
+
+-- dont forget to add foreign key order_detail to both of table ordern and products
+ALTER TABLE order_detail ADD CONSTRAINT fk_order_detail_product FOREIGN KEY (id_product) REFERENCES products (id);
+
+ALTER TABLE order_detail ADD CONSTRAINT fk_order_detail_order FOREIGN KEY (id_order) REFERENCES orders (id);
+
+-- join table
+	
+select o.id, od.id_order,od.id_product,od.price,od.quantity ,p.description from orders as o
+join order_detail as od on od.id_order = o.id
+join products as p on od.id_product = p.id;
+
+```
+
 ## ANOTHER EXAMPLE SQL CODE
 Remains of another example sql code
 
