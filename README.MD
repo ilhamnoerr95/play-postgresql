@@ -541,12 +541,34 @@ ALTER TABLE order_detail ADD CONSTRAINT fk_order_detail_product FOREIGN KEY (id_
 ALTER TABLE order_detail ADD CONSTRAINT fk_order_detail_order FOREIGN KEY (id_order) REFERENCES orders (id);
 
 -- join table
-	
 select o.id, od.id_order,od.id_product,od.price,od.quantity ,p.description from orders as o
 join order_detail as od on od.id_order = o.id
 join products as p on od.id_product = p.id;
 
 ```
+
+### Various JOIN TABLE
+1. Inner Join: Mecachinsm that first table have relation with second table, if one of table have no relation this mechanism join cannot be used.
+2. Left Join: this mechanism same with inner join the diffrent when the first table will take all the data/display the data even its no have relation on secondary table, if the second table has no relation the data will be null. EX: when category table have no relation on product table the data will be displayed, but the other side when product table have no relation on category table the data will be null.
+3. Right Join: this mechanism same as LEFT JOIN but the  diffrent is the data of second table will be display even that table have no relation on second table, but the other side if table one have no relation on second table the data will be null.
+4. Full Join: this mechanism combination of left and right join table which is bot of data table will be display even each table have no relation.
+
+```sql
+-- this will display only product that have a cateogry or vice versa
+SELECT * FROM category INNER JOIN products ON products.id_category = category.id;
+
+-- LEFT JOIN
+SELECT * FROM category lEFT JOIN products ON products.id_category = category.id;
+
+-- RIGHT JOIN
+SELECT * FROM category RIGHT JOIN products ON products.id_category = category.id;
+
+-- FULL JOIN
+SELECT * FROM category FULL JOIN products ON products.id_category = category.id;
+
+
+```
+
 
 ## ANOTHER EXAMPLE SQL CODE
 Remains of another example sql code
