@@ -237,10 +237,10 @@ LIMIT 2 OFFSET 2;
 
 ## SELECT DISTINC DATA
 
-When we query select, someime we got duplicates data. there is many duplicates of data, so when you want to avoid duplicate you can using DISTINC. add before column.
+When we query select, sometime we got duplicates data. there is many duplicates of data, so when you want to avoid duplicate you can using DISTINC. add before column.
 
 ```postgresql
-SELECT DISTINCT category
+SELECT DISTINCT name_column
 FROM products;
 
 ```
@@ -568,6 +568,51 @@ SELECT * FROM category FULL JOIN products ON products.id_category = category.id;
 
 
 ```
+
+### SUBQUERY
+Feature that help seek the data with select inside WHERE CLAUSE or FROM. Subquery could do in FROM clause.
+
+```sql
+-- subquery, FIND AVERAGE DATA WITH SUBQUERY
+SELECT * FROM products where price > (SELECT AVG(price) from PRODUCTS);
+
+-- subquery with from
+select MAX(price) from (
+    select products.price as price from category join products on products.id_category = category.id
+) as contoh;
+```
+
+### SET OPERATOR
+Operation of 2 result from SELECT query. there is more operator set as follows: 
+1. UNION: combine 2 select query where have duplicate data, the duplicate data will be remove from query result.
+2. UNION ALL: same as UNION but the duplicates data stay still display.
+3. INTERSECT: COMBINE 2 query, however the data that only fetch just only  there is of first query and second query.
+4. EXCEPT: OPERATION when the first query will be remove with secondary query. its mean,if there is data in first query same with second query then the result query will be removed from EXCEPT
+   
+```SQL
+-- union query combine 2 data or table become 1 when the data have duplicate result of query will be remove the duplicate data
+-- could using without DISTINC
+SELECT DISTINCT email from customer
+UNION 
+SELECT DISTINCT email from guestbooks; 
+
+-- union all combine 2 table bocome 1 for aggregate resul or count all table become 1 table
+select email, COUNT(email) from (select email from customer union all select email from guestbooks) as combine_table group by email;
+
+-- INTERSECT: THE FIRST QUERY WILL BE INTERSECT WITH SECONDARY QUERY,
+-- when the first table have'nt duplicate on secondary table, the result of query will not display.
+SELECT DISTINCT email from customer
+INTERSECT 
+SELECT DISTINCT email from guestbooks; 
+
+-- EXCEPT: FIND DATA THAT customer not write down on the guestbooks
+SELECT DISTINCT email from customer
+EXCEPT 
+SELECT DISTINCT email from guestbooks; 
+
+```
+
+### TRANSACTION
 
 
 ## ANOTHER EXAMPLE SQL CODE
