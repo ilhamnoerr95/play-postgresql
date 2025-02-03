@@ -592,6 +592,7 @@ Operation of 2 result from SELECT query. there is more operator set as follows:
 ```SQL
 -- union query combine 2 data or table become 1 when the data have duplicate result of query will be remove the duplicate data
 -- could using without DISTINC
+-- the main point is, it will be display all data even duplicate or not but when first table and second table have duplicate the result will display only one.
 SELECT DISTINCT email from customer
 UNION 
 SELECT DISTINCT email from guestbooks; 
@@ -600,12 +601,13 @@ SELECT DISTINCT email from guestbooks;
 select email, COUNT(email) from (select email from customer union all select email from guestbooks) as combine_table group by email;
 
 -- INTERSECT: THE FIRST QUERY WILL BE INTERSECT WITH SECONDARY QUERY,
--- when the first table have'nt duplicate on secondary table, the result of query will not display.
+-- when the first table have'nt duplicate on secondary table, this will be display the data have duplicate but the result of data will be 1 data for each duplicate.
+-- only display duplicate data then duplicate data will represent one of both table means only 1 data will be displayed.
 SELECT DISTINCT email from customer
 INTERSECT 
 SELECT DISTINCT email from guestbooks; 
 
--- EXCEPT: FIND DATA THAT customer not write down on the guestbooks
+-- EXCEPT: FIND DATA THAT customer not write down on the guestbooks, display data that have a duplicate on the secont table
 SELECT DISTINCT email from customer
 EXCEPT 
 SELECT DISTINCT email from guestbooks; 
@@ -613,6 +615,43 @@ SELECT DISTINCT email from guestbooks;
 ```
 
 ### TRANSACTION
+Mechanism of more than one action with 1 command. ex: when we create online shop and then go with order button then we have more to do like create order data, create order_detail. its means we could 1 act with 1 command at once. if error occurs in one of command, hopefully previous command will be cancelled, to keep data consistent.
+
+Database Transaction is DBMS feature where some actions considered to be a unit command. if there is failed process in transaction then automatically previous command will be cancelled. and if the command successfully then all command will be successfully to.
+
+> [!NOTE]
+> transaction cannot be used in DDL (data defintion language) command like create table, remove column etc, just only used in DML (data manipulation language) like INSERT, UPDATE, DELETE
+
+Command transaction in PostgresSql:
+1. START TRANSACTION: starting proccess  transaction, the next proccess will be considered transaction after COMMIT OR ROLLBACK COMMAND
+2. COMMIT: Saving the proccess transaction or data permanently in database.
+3. ROLLBACK: Canceling the proccess transaction or data will not be saved in database.
+
+``` sql
+-- ALWAYS BEGIN WITH START TRANSACTION, WHEN THE DATA HAVE BEEN COMMIT OR ROLLBACK THE START TRANSACTION WILL BE DONE.SO,IF WE WANNA GO WITH ANOTHER TRANSACTION BEGIN WITH START TRANSACTION AGAIN.
+
+START TRANSACTION
+INSERT INTO guestbooks(email, title, content) 
+VALUES ('transaction@gmail.com', 'transaction1', 'transaction 1'), 
+	('transaction2@gmail.com', 'transaction2', 'transaction 2')
+;
+
+commit
+
+INSERT INTO guestbooks(email, title, content) 
+VALUES ('rollback3@gmail.com', 'rollback3', 'rollback 3'), 
+('rollback4@gmail.com', 'rollback 4', 'rollback 4');
+
+rollback
+
+```
+
+### LOCKING
+process locking data in dbms, locking data is very important thas make db consistent, beacause there is condition many user will be data in the same time, if do not have LOCKING it'll be RACE CONDITION when change user in the same time.
+locking record, when do TRANSACTION process , then we go to change the data, automatically the data will be lock. so TRANSACTION FEATURE IS VERY USEFULL AND SAFE FOR DATA MANIPULATION. especially manipulation than 1 times.  Data will lock ntil reach COMMIT OR ROLLBACK.
+
+>[!WARNING]
+> be cautios with DEADLOCK this condition occurs when 2 data prcess waiting each other that both of data awaited locked by another process, so that waiting it will be never finish.
 
 
 ## ANOTHER EXAMPLE SQL CODE
