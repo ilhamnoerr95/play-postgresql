@@ -683,8 +683,15 @@ user root as default postgresql make main user as super administrator that means
 CREATE ROLE ilham
 
 DROP ROLE ilham
+```
 
+### backup database
 
+```sql
+pg_dump --host=localhost --port=5432 --dbname=belajar --username=nama_users --format=plain --file=/Users/fdn-user/Documents/bakcup/backup.sql
+
+-- UNTUK RESTORE 
+psql --host=localhost --port=5432 --dbname=belajar_restore --username=nama_users --file=/Users/fdn-user/Documents/bakcup/backup.sql
 ```
 
 
