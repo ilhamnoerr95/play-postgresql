@@ -653,6 +653,40 @@ locking record, when do TRANSACTION process , then we go to change the data, aut
 >[!WARNING]
 > be cautios with DEADLOCK this condition occurs when 2 data prcess waiting each other that both of data awaited locked by another process, so that waiting it will be never finish.
 
+### SCHEMA
+When we created database postgres, automatically have schema with name public, and we created table that table will save in schema public.
+
+when we created table in schema selected, the table will be automatically saved inside schema selected. if we decided to save with manually method, we could add some prefix of table name. ex: schemaname.schematable.
+
+```sql
+select current_schema();
+
+SHOW search_path;
+<!-- create and delete schema -->
+CREATE SCHEMA EX;
+-- BE CAUTION WHEN DROP SCHEMA, ALL TABLE INSIDE SCHEMA WILL BE REMOVE TO
+DROP SCHEMA EX;
+
+-- move schema
+SET search_path TO SCHEMA_NAME;
+
+-- example when we not selected the schema 
+-- create in new schema, just called prefix schema that what we wanna call.
+CREATE TABLE schema_name.name_table(id SERIAL NOT NULL, name VARCHAR(250));
+
+```
+
+### USER MANAGEMENT
+user root as default postgresql make main user as super administrator that means freely to do anything like SELECT, OR MANIPUTATION DATABASE. BUT in best practice no using user root, we have to specified user based on the applikaction or database.
+
+```sql
+CREATE ROLE ilham
+
+DROP ROLE ilham
+
+
+```
+
 
 ## ANOTHER EXAMPLE SQL CODE
 Remains of another example sql code
