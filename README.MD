@@ -230,7 +230,7 @@ LIMIT 3;
 SELECT * FROM name_table
 WHERE price > 0
 ORDER BY id ASC
-<!-- OFFSET MEANs, take data from index/offset 3 to LIMIT -->
+<!-- OFFSET MEANs, take data from index/offset 3 to LIMIT, LIKE PAGINATION page 2 from limit 2 -->
 LIMIT 2 OFFSET 2;
 
 ```
@@ -277,7 +277,6 @@ SELECT nextval('name_sequence')
 
 <!-- take last sequence value -->
 SELECT currval('name_sequence')
-
 ```
 
 ## FLOW CONTROL
@@ -458,8 +457,6 @@ have to same with table of reference. Foreign key as a constraint which is the t
 > [!NOTE]
 > As default, value of reference table cannot be removed when data column of foreign-key have same value with reference column table. But that not means, cannot be removed. See how to know about behavior of foreign-key at the folder provided.
 
-
-
 ```postgresql
 <!-- create foreign key -->
 create table wishlist (
@@ -482,6 +479,7 @@ ADD CONSTRAINT fk_wishlist_product foreign KEY (id_product) references products 
 ```
 
 ### JOIN TABLE
+
 menggabungkan beberapa table menjadi 1 table, dimana kita perlu menentukan table mana yang memiliki referensi atas foreign key dari sebuah table.
 
 > [!NOTE]
@@ -489,46 +487,50 @@ menggabungkan beberapa table menjadi 1 table, dimana kita perlu menentukan table
 
 ```sql
 -- table wishtlist ingin join dengan table product
-Select * from wishlist_table 
+Select * from wishlist_table
 -- join di table product di kolom product.id dengan wishlist_table.id_product
 JOIN product ON product.id = wishlist_table.id_product
 
 -- join multiple table
-SELECT customer.email, products.id, products.price , wishlist.description 
+SELECT customer.email, products.id, products.price , wishlist.description
 FROM wishlist
 JOIN product ON product.id = wishlist.id_product
 JOIN customer ON customer.id = wishlist.id_customer;
 ```
 
 ### ONE TO ONE RELATIONSHIP TABLE
-One to one relationship is very simple relation between table, its mean one table just only relation to one table not more. 
+
+One to one relationship is very simple relation between table, its mean one table just only relation to one table not more.
 
 ```sql
-select c.id ,c.email, c.username, w.balance 
+select c.id ,c.email, c.username, w.balance
 from customer as c
 join wallet as w on w.id_customer  = c.id;
 
 ```
 
 ### ONE TO MANY RELATIONSHIP TABLE
+
 relation that one data could using for many data in relation table. ex: 1 category could using for more than 1 products, 1 category have more than 1 products.
 
 ### MANY TO MANY RELATIONSHIP TABLE
+
 many to many relationships are very confused for a newbie, which is many to many relation between 2 table that first table have many relation to table 2 or vice versa. ex: product table and sale, that product could sale many times,even sale could more than for 1 products.
 
 > [!NOTE]
 > brief of many to many relations:
-> 1. id_product in table order: \
-> a. when add id_product to order table that means, this case could products sold many times. but we just could order only 1 products because id_product column represents of 1 products not more.
-> 2. id_order in table products: \
-> a. this case we could 1 order have many products, but the problem is 1 products just only sold 1 times.
 >
-> The solution of this problem is we have to add 1 table between table products and sale, we could leverage this table as bridge for join relation many to many. 
+> 1. id_product in table order: \
+>    a. when add id_product to order table that means, this case could products sold many times. but we just could order only 1 products because id_product column represents of 1 products not more.
+> 2. id_order in table products: \
+>    a. this case we could 1 order have many products, but the problem is 1 products just only sold 1 times.
+>
+> The solution of this problem is we have to add 1 table between table products and sale, we could leverage this table as bridge for join relation many to many.
 
 ```sql
 -- create for intermediary table many to many
 CREATE TABLE order_detail (
-    id_product INT NOT NULL, 
+    id_product INT NOT NULL,
     id_order INT NOT NULL,
     price INT NOT NULL,
     quantity INT NOT NULL,
@@ -548,9 +550,10 @@ join products as p on od.id_product = p.id;
 ```
 
 ### Various JOIN TABLE
+
 1. Inner Join: Mecachinsm that first table have relation with second table, if one of table have no relation this mechanism join cannot be used.
 2. Left Join: this mechanism same with inner join the diffrent when the first table will take all the data/display the data even its no have relation on secondary table, if the second table has no relation the data will be null. EX: when category table have no relation on product table the data will be displayed, but the other side when product table have no relation on category table the data will be null.
-3. Right Join: this mechanism same as LEFT JOIN but the  diffrent is the data of second table will be display even that table have no relation on second table, but the other side if table one have no relation on second table the data will be null.
+3. Right Join: this mechanism same as LEFT JOIN but the diffrent is the data of second table will be display even that table have no relation on second table, but the other side if table one have no relation on second table the data will be null.
 4. Full Join: this mechanism combination of left and right join table which is bot of data table will be display even each table have no relation.
 
 ```sql
@@ -570,6 +573,7 @@ SELECT * FROM category FULL JOIN products ON products.id_category = category.id;
 ```
 
 ### SUBQUERY
+
 Feature that help seek the data with select inside WHERE CLAUSE or FROM. Subquery could do in FROM clause.
 
 ```sql
@@ -583,19 +587,21 @@ select MAX(price) from (
 ```
 
 ### SET OPERATOR
-Operation of 2 result from SELECT query. there is more operator set as follows: 
+
+Operation of 2 result from SELECT query. there is more operator set as follows:
+
 1. UNION: combine 2 select query where have duplicate data, the duplicate data will be remove from query result.
 2. UNION ALL: same as UNION but the duplicates data stay still display.
-3. INTERSECT: COMBINE 2 query, however the data that only fetch just only  there is of first query and second query.
+3. INTERSECT: COMBINE 2 query, however the data that only fetch just only there is of first query and second query.
 4. EXCEPT: OPERATION when the first query will be remove with secondary query. its mean,if there is data in first query same with second query then the result query will be removed from EXCEPT
-   
+
 ```SQL
 -- union query combine 2 data or table become 1 when the data have duplicate result of query will be remove the duplicate data
 -- could using without DISTINC
 -- the main point is, it will be display all data even duplicate or not but when first table and second table have duplicate the result will display only one.
 SELECT DISTINCT email from customer
-UNION 
-SELECT DISTINCT email from guestbooks; 
+UNION
+SELECT DISTINCT email from guestbooks;
 
 -- union all combine 2 table bocome 1 for aggregate resul or count all table become 1 table
 select email, COUNT(email) from (select email from customer union all select email from guestbooks) as combine_table group by email;
@@ -604,17 +610,18 @@ select email, COUNT(email) from (select email from customer union all select ema
 -- when the first table have'nt duplicate on secondary table, this will be display the data have duplicate but the result of data will be 1 data for each duplicate.
 -- only display duplicate data then duplicate data will represent one of both table means only 1 data will be displayed.
 SELECT DISTINCT email from customer
-INTERSECT 
-SELECT DISTINCT email from guestbooks; 
+INTERSECT
+SELECT DISTINCT email from guestbooks;
 
 -- EXCEPT: FIND DATA THAT customer not write down on the guestbooks, display data that have a duplicate on the secont table
 SELECT DISTINCT email from customer
-EXCEPT 
-SELECT DISTINCT email from guestbooks; 
+EXCEPT
+SELECT DISTINCT email from guestbooks;
 
 ```
 
 ### TRANSACTION
+
 Mechanism of more than one action with 1 command. ex: when we create online shop and then go with order button then we have more to do like create order data, create order_detail. its means we could 1 act with 1 command at once. if error occurs in one of command, hopefully previous command will be cancelled, to keep data consistent.
 
 Database Transaction is DBMS feature where some actions considered to be a unit command. if there is failed process in transaction then automatically previous command will be cancelled. and if the command successfully then all command will be successfully to.
@@ -623,23 +630,24 @@ Database Transaction is DBMS feature where some actions considered to be a unit 
 > transaction cannot be used in DDL (data defintion language) command like create table, remove column etc, just only used in DML (data manipulation language) like INSERT, UPDATE, DELETE
 
 Command transaction in PostgresSql:
-1. START TRANSACTION: starting proccess  transaction, the next proccess will be considered transaction after COMMIT OR ROLLBACK COMMAND
+
+1. START TRANSACTION: starting proccess transaction, the next proccess will be considered transaction after COMMIT OR ROLLBACK COMMAND
 2. COMMIT: Saving the proccess transaction or data permanently in database.
 3. ROLLBACK: Canceling the proccess transaction or data will not be saved in database.
 
-``` sql
+```sql
 -- ALWAYS BEGIN WITH START TRANSACTION, WHEN THE DATA HAVE BEEN COMMIT OR ROLLBACK THE START TRANSACTION WILL BE DONE.SO,IF WE WANNA GO WITH ANOTHER TRANSACTION BEGIN WITH START TRANSACTION AGAIN.
 
 START TRANSACTION
-INSERT INTO guestbooks(email, title, content) 
-VALUES ('transaction@gmail.com', 'transaction1', 'transaction 1'), 
+INSERT INTO guestbooks(email, title, content)
+VALUES ('transaction@gmail.com', 'transaction1', 'transaction 1'),
 	('transaction2@gmail.com', 'transaction2', 'transaction 2')
 ;
 
 commit
 
-INSERT INTO guestbooks(email, title, content) 
-VALUES ('rollback3@gmail.com', 'rollback3', 'rollback 3'), 
+INSERT INTO guestbooks(email, title, content)
+VALUES ('rollback3@gmail.com', 'rollback3', 'rollback 3'),
 ('rollback4@gmail.com', 'rollback 4', 'rollback 4');
 
 rollback
@@ -647,13 +655,15 @@ rollback
 ```
 
 ### LOCKING
-process locking data in dbms, locking data is very important thas make db consistent, beacause there is condition many user will be data in the same time, if do not have LOCKING it'll be RACE CONDITION when change user in the same time.
-locking record, when do TRANSACTION process , then we go to change the data, automatically the data will be lock. so TRANSACTION FEATURE IS VERY USEFULL AND SAFE FOR DATA MANIPULATION. especially manipulation than 1 times.  Data will lock ntil reach COMMIT OR ROLLBACK.
 
->[!WARNING]
+process locking data in dbms, locking data is very important thas make db consistent, beacause there is condition many user will be data in the same time, if do not have LOCKING it'll be RACE CONDITION when change user in the same time.
+locking record, when do TRANSACTION process , then we go to change the data, automatically the data will be lock. so TRANSACTION FEATURE IS VERY USEFULL AND SAFE FOR DATA MANIPULATION. especially manipulation than 1 times. Data will lock ntil reach COMMIT OR ROLLBACK.
+
+> [!WARNING]
 > be cautios with DEADLOCK this condition occurs when 2 data prcess waiting each other that both of data awaited locked by another process, so that waiting it will be never finish.
 
 ### SCHEMA
+
 When we created database postgres, automatically have schema with name public, and we created table that table will save in schema public.
 
 when we created table in schema selected, the table will be automatically saved inside schema selected. if we decided to save with manually method, we could add some prefix of table name. ex: schemaname.schematable.
@@ -670,13 +680,14 @@ DROP SCHEMA EX;
 -- move schema
 SET search_path TO SCHEMA_NAME;
 
--- example when we not selected the schema 
+-- example when we not selected the schema
 -- create in new schema, just called prefix schema that what we wanna call.
 CREATE TABLE schema_name.name_table(id SERIAL NOT NULL, name VARCHAR(250));
 
 ```
 
 ### USER MANAGEMENT
+
 user root as default postgresql make main user as super administrator that means freely to do anything like SELECT, OR MANIPUTATION DATABASE. BUT in best practice no using user root, we have to specified user based on the applikaction or database.
 
 ```sql
@@ -690,12 +701,12 @@ DROP ROLE ilham
 ```sql
 pg_dump --host=localhost --port=5432 --dbname=belajar --username=nama_users --format=plain --file=/Users/fdn-user/Documents/bakcup/backup.sql
 
--- UNTUK RESTORE 
+-- UNTUK RESTORE
 psql --host=localhost --port=5432 --dbname=belajar_restore --username=nama_users --file=/Users/fdn-user/Documents/bakcup/backup.sql
 ```
 
-
 ## ANOTHER EXAMPLE SQL CODE
+
 Remains of another example sql code
 
 ```postgresql
