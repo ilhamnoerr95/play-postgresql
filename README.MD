@@ -534,6 +534,7 @@ CREATE TABLE order_detail (
     id_order INT NOT NULL,
     price INT NOT NULL,
     quantity INT NOT NULL,
+    -- created composite pk for unique combination
     PRIMARY KEY (id_product, id_order)
 )
 
