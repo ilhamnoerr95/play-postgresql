@@ -526,6 +526,7 @@ many to many relationships are very confused for a newbie, which is many to many
 >    a. this case we could 1 order have many products, but the problem is 1 products just only sold 1 times.
 >
 > The solution of this problem is we have to add 1 table between table products and sale, we could leverage this table as bridge for join relation many to many.
+> TAKE A NOTE THAT FK (FOREIGN KEY) Always be in many table.
 
 ```sql
 -- create for intermediary table many to many
@@ -547,6 +548,54 @@ ALTER TABLE order_detail ADD CONSTRAINT fk_order_detail_order FOREIGN KEY (id_or
 select o.id, od.id_order,od.id_product,od.price,od.quantity ,p.description from orders as o
 join order_detail as od on od.id_order = o.id
 join products as p on od.id_product = p.id;
+
+```
+
+```sql
+-- many to many query
+
+CREATE TABLE products (
+  id UUID PRIMARY KEY,
+  name TEXT NOT NULL,
+  price INT NOT NULL
+);
+
+CREATE TABLE orders (
+  id UUID PRIMARY KEY,
+  order_date TIMESTAMP NOT NULL DEFAULT now()
+);
+
+-- konjungsi tabel, tabel pembantu
+CREATE TABLE order_details (
+  order_id UUID NOT NULL,
+  product_id UUID NOT NULL,
+  qty INT NOT NULL,
+  price INT NOT NULL,
+-- composite pk
+  PRIMARY KEY (order_id, product_id),
+
+  CONSTRAINT fk_order
+    FOREIGN KEY (order_id)
+    REFERENCES orders(id)
+    ON DELETE CASCADE,
+
+  CONSTRAINT fk_product
+    FOREIGN KEY (product_id)
+    REFERENCES products(id)
+    ON DELETE RESTRICT
+);
+-- many to many ends
+
+-- query wwith transaction, for consistency data
+BEGIN;
+
+-- 1. buat order
+INSERT INTO orders (id) VALUES ('749556bc-9b11-4f90-aba3-064106ed9dbe');
+-- 2. masukkan product ke order
+INSERT INTO order_details (order_id, product_id, qty, price) VALUES ('749556bc-9b11-4f90-aba3-064106ed9dbe', '37f80a94-efad-4ae0-bfd2-37f5653c66ad', 2, 40), ('749556bc-9b11-4f90-aba3-064106ed9dbe', '2aba6a83-2d82-40b9-a06e-cab20da9ffb3', 2, 50);
+
+COMMIT;
+
 
 ```
 
